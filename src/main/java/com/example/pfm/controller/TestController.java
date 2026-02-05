@@ -18,7 +18,6 @@ import java.util.Map;
  * Provides endpoints for executing automated tests.
  */
 @RestController
-@RequestMapping("/api")
 @Slf4j
 public class TestController {
 
@@ -28,7 +27,7 @@ public class TestController {
      * @param request HTTP request to determine the base URL
      * @return Test script execution results
      */
-    @GetMapping
+    @GetMapping("/api")
     public ResponseEntity<Map<String, Object>> runTests(HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         

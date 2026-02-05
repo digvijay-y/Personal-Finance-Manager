@@ -40,8 +40,8 @@ public class SecurityConfig {
                         .securityContextRepository(securityContextRepository())
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api").permitAll()  // Allow test endpoint  
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                        .requestMatchers("/api").permitAll()  // Allow test endpoint
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )

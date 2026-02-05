@@ -197,6 +197,93 @@ POST /api/goals
 | GET | `/api/reports/monthly?year={year}&month={month}` | Get monthly report |
 | GET | `/api/reports/yearly?year={year}` | Get yearly report |
 
+## Live API Examples
+
+The Personal Finance Manager API is deployed at **https://pfm-latest.onrender.com**
+
+### Test All Endpoints
+```bash
+# Get comprehensive test results showing all API functionality
+curl https://pfm-latest.onrender.com/api
+```
+
+### Authentication Examples
+
+#### Register a New User
+```bash
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"username":"user@example.com","password":"securepass123","fullName":"John Doe","phoneNumber":"+1234567890"}' \
+  https://pfm-latest.onrender.com/api/auth/register
+```
+
+**Response:**
+```json
+{"message":"User registered successfully","userId":1}
+```
+
+#### Login
+```bash
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"username":"user@example.com","password":"securepass123"}' \
+  -c cookies.txt \
+  https://pfm-latest.onrender.com/api/auth/login
+```
+
+**Response:**
+```json
+{"message":"Login successful"}
+```
+
+#### Access Protected Endpoints (after login)
+```bash
+# List transactions (requires authentication)
+curl -b cookies.txt https://pfm-latest.onrender.com/api/transactions
+
+# Create a transaction
+curl -X POST -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{"amount":1500.00,"date":"2026-02-06","category":"Salary","description":"Freelance work","type":"INCOME"}' \
+  https://pfm-latest.onrender.com/api/transactions
+
+# List categories
+curl -b cookies.txt https://pfm-latest.onrender.com/api/categories
+
+# Create a custom category  
+curl -X POST -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{"name":"Consulting","type":"INCOME"}' \
+  https://pfm-latest.onrender.com/api/categories
+
+# List financial goals
+curl -b cookies.txt https://pfm-latest.onrender.com/api/goals
+
+# Get monthly report
+curl -b cookies.txt "https://pfm-latest.onrender.com/api/reports/monthly?year=2026&month=2"
+```
+
+### Quick Test Script
+```bash
+#!/bin/bash
+BASE_URL="https://pfm-latest.onrender.com"
+
+# Register a test user
+echo "Registering user..."
+curl -s -X POST -H "Content-Type: application/json" \
+  -d '{"username":"testuser@example.com","password":"testpass123","fullName":"Test User","phoneNumber":"+1234567890"}' \
+  $BASE_URL/api/auth/register
+
+# Login and save session
+echo -e "\nLogging in..."
+curl -s -X POST -H "Content-Type: application/json" \
+  -d '{"username":"testuser@example.com","password":"testpass123"}' \
+  -c /tmp/cookies.txt \
+  $BASE_URL/api/auth/login
+
+# Test authenticated endpoint
+echo -e "\nTesting authenticated endpoint..."
+curl -s -b /tmp/cookies.txt $BASE_URL/api/transactions
+```
+
 ## Design Decisions
 
 ### 1. Layered Architecture
